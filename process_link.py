@@ -1,6 +1,8 @@
 from pytube import YouTube
 import asyncio
-dir_path = 'C:\\Users\\hardik\\PycharmProjects\\TeleGramBot\\TrimmedVideoDownloaded\\'
+import json
+with open('config.json') as f:
+    dir_path = json.load(f)['videos_path']
 
 def get_available_qualities(youtube_link):
     try:

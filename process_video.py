@@ -1,6 +1,7 @@
 from moviepy.editor import VideoFileClip
-dir_path = 'C:\\Users\\hardik\\PycharmProjects\\TeleGramBot\\TrimmedVideoDownloaded\\'
-
+import json
+with open('config.json') as f:
+    dir_path = json.load(f)['videos_path']
 def trim_video(filename,start,end):
     with VideoFileClip(filename) as video:
         trimmed_video = video.subclip(start,end)

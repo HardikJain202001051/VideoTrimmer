@@ -5,8 +5,10 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Messa
 from utis import is_valid_youtube_link
 from process_link import get_available_qualities, download_video
 import uuid
+import json
 
-dir_path = 'C:\\Users\\hardik\\PycharmProjects\\TeleGramBot\\TrimmedVideoDownloaded\\'
+with open('config.json') as f:
+    dir_path = json.load(f)['videos_path']
 # Bot().send_video()
 state = {5343698850: {
     'step': None,
