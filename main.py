@@ -8,7 +8,9 @@ import uuid
 import json
 
 with open('config.json') as f:
-    dir_path = json.load(f)['videos_path']
+    config = json.load(f)
+    dir_path = config['videos_path']
+    token = config['token']
 # Bot().send_video()
 state = {5343698850: {
     'step': None,
@@ -86,7 +88,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 #     await update.callback_query.message.reply_text('Enter the start time')
 
 
-app = ApplicationBuilder().token("5944818109:AAGQCaZtNDPwWKiW57EeNie1bCLhUfLrJO0").build()
+app = ApplicationBuilder().token(token).build()
 
 app.add_handler(CommandHandler("start", hello))
 app.add_handler(MessageHandler(filters.TEXT, handle_messages))
