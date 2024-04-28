@@ -7,11 +7,19 @@ from process_link import get_available_qualities, download_video
 import uuid
 import json
 
+
+"""
+token: Unique ID of telegram Bot
+dir_path:  dir where downloaded videos will be stored
+"""
 with open('config.json') as f:
     config = json.load(f)
     dir_path = config['videos_path']
     token = config['token']
-# Bot().send_video()
+
+"""
+state contains Unique IDs of tg users as keys and their info as value
+"""
 state = {5343698850: {
     'step': None,
     'start_timestamp': None,
@@ -19,7 +27,6 @@ state = {5343698850: {
     'link': None,
     'filename':None
 }}
-pattern = r'^download\|\d+$'
 
 
 async def trim_and_send(user_id: int, chat_id: int):
@@ -32,6 +39,10 @@ async def trim_and_send(user_id: int, chat_id: int):
 
 
 async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    This function has been registered as callback for /start command handler.
+    :param update:contains all the information about the user query which made this callback execute
+    """
     user_id = update.message.from_user.id
     if user_id not in state.keys():
         return
@@ -75,7 +86,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         chat_id = update.message.chat_id
         asyncio.create_task(trim_and_send(user_id, chat_id))
 
-#
+
 # async def get_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #     user_id = update.effective_user.id
 #     data = update.callback_query.data
@@ -88,10 +99,38 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 #     await update.callback_query.message.reply_text('Enter the start time')
 
 
+
+# Builds the server side application for our telegram bot using the bot token
 app = ApplicationBuilder().token(token).build()
 
+"""
+To respond to user queries we need to register handlers in the app. Handler will execute callback on recieving the query.
+Different queries have different handlers.
+For eg, is user sends a command we need command handler
+The below handler is for /start command where 'hello' function is registered as callback
+"""
 app.add_handler(CommandHandler("start", hello))
+
+
+"""
+This handler handles incoming messages. 
+filters.TEXT specifies that it will handle text messages only
+"""
 app.add_handler(MessageHandler(filters.TEXT, handle_messages))
+
+
+"""
+Below handler handles inline button clicks. 
+"""
+# pattern = r'^download\|\d+$'
 # app.add_handler(CallbackQueryHandler(callback=get_video, pattern=pattern))
+
+"""
+We can control the bot using 'app' directly or through the bot instance depending on the task
+For eg, to directly send a message to a user or group, we can use Bot.send_message(chat_id,text)
+"""
 Bot = app.bot
+
+
+# Polling and webhooks both are allowed
 app.run_polling()
