@@ -1,13 +1,24 @@
-from moviepy.editor import VideoFileClip
+# import ffmpeg
 import json
+import subprocess
 with open('config.json') as f:
     dir_path = json.load(f)['videos_path']
-def trim_video(filename,start,end):
-    with VideoFileClip(filename) as video:
-        trimmed_video = video.subclip(start,end)
-        trimmed_video.write_videofile(dir_path+'trimmed-'+filename)
-        trimmed_video.close()
 
+def check_time_stamp():
+    pass
+
+def trim_video(filename,start,end):
+    start = check_time_stamp()
+    end = check_time_stamp()
+    command = f"ffmpeg -i {dir_path+filename} -ss {start} -t {end} -c copy {dir_path+'trimmed-'+filename}"
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    print("Output:", result.stdout)
+    if result.stderr:
+        print("Error:", result.stderr)
 
 if __name__ == '__main__':
-    trim_video(r'C:\Users\hardik\PycharmProjects\TeleGramBot\TrimmedVideoDownloaded\Saari Duniya Jalaa Denge.mp4',1,180)
+    import time
+    start = time.time()
+    dir_path = r'C:\\Users\\hardik\\PycharmProjects\\TeleGramBot\\TrimmedVideoDownloaded\\'
+    trim_video('40118b62.mp4',100,500)
+    print(time.time() - start)

@@ -18,7 +18,7 @@ def get_available_qualities(youtube_link):
     except Exception as e:
         print("Error:", e)
 
-async def download_video(youtube_link,filename):
+def download_video(youtube_link,filename):
     yt = YouTube(youtube_link)
     # path = yt.streams.get_by_itag(int(itag)).download()
     # return path
@@ -31,9 +31,10 @@ def send_resolution_list():
     pass
 
 if __name__ == '__main__':
+
     import time
     start = time.time()
-    youtube_link = "https://www.youtube.com/watch?v=3Qqs6euhvD8"
+    youtube_link = "https://www.youtube.com/watch?v=DodeWQw3N3A"
     # available_qualities = get_available_qualities(youtube_link)
     download_video(youtube_link,filename='file.mp4')
     print(time.time()-start)
