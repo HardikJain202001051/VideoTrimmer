@@ -26,7 +26,7 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if user_id not in allowed_users:
         return
     await update.message.reply_text(
-        f'Hey {update.effective_user.first_name}, Please send the link and follow the steps', disable_web_page_preview=True)
+        f'Hey {update.effective_user.first_name}, Please send link to the YouTube video and follow the steps')
 
 
 async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -51,7 +51,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     elif user_state[user_id]['step'] == 'end':
         start = user_state[user_id]['start_time']
         end = text
-        start,end = parse_timestamp(start), parse_timestamp(end)
+        start, end = parse_timestamp(start), parse_timestamp(end)
         if not end or not start:
             await update.message.reply_text('Send a valid timestamp range')
         else:
