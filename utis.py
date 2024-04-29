@@ -1,5 +1,7 @@
 import re
 import json
+import os
+
 class Config:
     """
     token: Unique ID of telegram Bot
@@ -9,9 +11,8 @@ class Config:
         config = json.load(f)
         dir_path = config['videos_path']
         token = config['token']
-        allowed_users = config['allowed_users']
-
-
+        allowed_users = set(config['allowed_users'])
+        user_state = config['state']
 def is_valid_youtube_link(url):
     # Regular expression to match YouTube URLs
     pattern = r'https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)[\w-]+'
@@ -21,20 +22,27 @@ def is_valid_youtube_link(url):
     else:
         return False
 
-def check_timestamp(timestamp):
-    timestamp = timestamp.split('.')
-    if len(timestamp) > 3:
-        return None
-    for i in timestamp:
-        if len(i) > 2 or not i.isdigit():
+def parse_timestamp(timestamp):
+    timestamp = timestamp.split(' ')
+    time = 0
+    for t in timestamp:
+        if not t:
+            continue
+        if 'h' in t:
+            time = time + (3600*int(t[:-1]))
+        elif 'm' in t:
+            time = time + (60*int(t[:-1]))
+        elif 's' in t:
+            time = time + int(t[:-1])
+        else:
             return None
-    return ':'.join(timestamp)
+    return time
 
-def get_timestamp(text):
-    if len(text)<3:
-        start = 0
-    else:
-        start = check_timestamp(text[1])
-    end = check_timestamp(text[-1])
-    return start,end
+def find_file_with_prefix(prefix):
+    # Get list of files in the directory
+    files = os.listdir(Config.dir_path)
+
+    # Filter files that start with the given prefix
+    matching_files = [file for file in files if file.startswith(prefix)]
+    return matching_files[0]
 
