@@ -57,12 +57,11 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 
     elif user_state[user_id]['step'] == 'end':
-        start = user_state[user_id]['start_time']
-        end = text
-        start, end = parse_timestamp(start), parse_timestamp(end)
-        if not end or not start:
+        end = parse_timestamp(text)
+        if not end:
             await update.message.reply_text('Send a valid timestamp range')
         else:
+            start = user_state[user_id]['start_time']
             link = user_state[user_id]['link']
             user_state[user_id]['step'] = 'link'
             filename = str(uuid.uuid4())[:5]
