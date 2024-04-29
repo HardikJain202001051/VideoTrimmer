@@ -21,10 +21,14 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     This function has been registered as callback for /start command handler.
     update:contains all the information about the user query which made this callback execute
     """
-
     user_id = str(update.message.from_user.id)
     if user_id not in allowed_users:
         return
+    user_state['user_id'] = {
+        "step": "link",
+        "start_time": "",
+        "end_time": ""
+    }
     await update.message.reply_text(
         f'Hey {update.effective_user.first_name}, Please send link to the YouTube video and follow the steps')
 
@@ -43,9 +47,13 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             await update.message.reply_text('Enter the start time\n\nExample -> 1h 20m 10s')
 
     elif user_state[user_id]['step'] == 'start':
-        user_state[user_id]['start_time'] = text
-        user_state[user_id]['step'] = 'end'
-        await update.message.reply_text('Enter the end time')
+        start = parse_timestamp(text)
+        if start:
+            user_state[user_id]['start_time'] = text
+            user_state[user_id]['step'] = 'end'
+            await update.message.reply_text('Enter the end time')
+        else:
+            await update.message.reply_text("Send a valid timestamp range")
 
 
     elif user_state[user_id]['step'] == 'end':
