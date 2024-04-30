@@ -11,8 +11,11 @@ class Config:
         config = json.load(f)
         dir_path = config['videos_path']
         token = config['token']
-        allowed_users = set(config['allowed_users'])
-        user_state = config['state']
+        allowed_users = set(map(int,config['allowed_users']))
+        user_state ={}
+        for user in allowed_users:
+            user_state[int(user)] = {'step':'link'}
+
 def is_valid_youtube_link(url):
     # Regular expression to match YouTube URLs
     pattern = r'https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)[\w-]+'

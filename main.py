@@ -1,7 +1,8 @@
 import asyncio
 
-from telegram import Update, Bot
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters, CallbackQueryHandler
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters, \
+    CallbackQueryHandler, Application
 from utis import is_valid_youtube_link, Config, parse_timestamp
 import uuid
 import subprocess
@@ -12,6 +13,7 @@ from utis import find_file_with_prefix
 dir_path = ''
 allowed_users = set()
 user_state = {}
+app = None
 
 
 # Bot().send_video()
@@ -21,7 +23,7 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     This function has been registered as callback for /start command handler.
     update:contains all the information about the user query which made this callback execute
     """
-    user_id = str(update.message.from_user.id)
+    user_id = (update.message.from_user.id)
     if user_id not in allowed_users:
         return
     user_state['user_id'] = {
@@ -34,9 +36,10 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = str(update.message.from_user.id)
+    user_id = (update.message.from_user.id)
     if user_id not in allowed_users:
         await update.message.reply_text("You do not have permission to access this bot.")
+        return
     text = update.message.text
     if user_state[user_id]['step'] == 'link':
         if not is_valid_youtube_link(text):
@@ -92,7 +95,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 # state contains Unique IDs of tg users as keys and their info as value
 def main():
     # Builds the server side application for our telegram bot using the bot token
-    app = ApplicationBuilder().token(Config.token).build()
+    app = ApplicationBuilder().token(Config.token).concurrent_updates(True).build()
 
     """To respond to user queries we need to register handlers in the app. Handler will execute callback on receiving 
     the query. Different queries have different handlers. For eg, is user sends a command we need command handler The 
