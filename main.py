@@ -72,7 +72,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             cmd = f'yt-dlp  --format "mkv,mp4" --download-sections "*{start}-{end}" --force-keyframes-at-cuts -o {output_file} {link}'
             proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
             print(proc.stdout)
-            output_file = dir_path + find_file_with_prefix(filename)
+            # output_file = dir_path + find_file_with_prefix(filename)
             retries = 3
             while retries:
                 try:
@@ -86,7 +86,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     await update.message.reply_text(str(e))
             file_path = Path(output_file)
             if file_path.exists():
-                file_path.unlink()
+                # file_path.unlink()
                 print("File deleted successfully.")
             else:
                 print("File does not exist.")
