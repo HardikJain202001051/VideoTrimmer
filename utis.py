@@ -28,7 +28,7 @@ def parse_timestamp(timestamp):
     time = 0
     for t in timestamp:
         p,s = t[:-1],t[-1]
-        if not p.isidigit():
+        if not p.isdigit():
             return None
         p = int(p)
         if 'h' == s:
