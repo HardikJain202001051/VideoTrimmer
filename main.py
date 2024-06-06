@@ -81,7 +81,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             user_state[user_id]['step'] = 'link'
             filename = str(uuid.uuid4())[:5]
             output_file = dir_path + filename
-            wait_msg = await update.message.reply_text("⌛ Your request is in process...Please wai few minutes")
+            wait_msg = await update.message.reply_text("⌛ Your request is in process...Please wait few minutes")
             cmd = f'yt-dlp  --format "mkv,mp4" --download-sections "*{start}-{end}" --force-keyframes-at-cuts -o {output_file} {link}'
             proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
             print(proc.stdout)
