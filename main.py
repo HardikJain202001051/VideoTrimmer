@@ -94,6 +94,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             retries = 3
             while retries:
                 try:
+                    raise Exception
                     await update.message.reply_video(video=output_file, read_timeout=600, write_timeout=600,
                                                      supports_streaming=True)
                     break
