@@ -65,7 +65,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     elif user_state[user_id]['step'] == 'start':
         start = parse_timestamp(text)
-        if start:
+        if start is not None:
             user_state[user_id]['start_time'] = start
             user_state[user_id]['step'] = 'end'
             await update.message.reply_text('Enter the end time')
@@ -75,8 +75,12 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     elif user_state[user_id]['step'] == 'end':
         end = parse_timestamp(text)
-        if end:
+        if end is not None:
+
             start = user_state[user_id]['start_time']
+            if start >= end:
+                await update.message.reply_text("End time cannot be less than or equal to start time")
+                break
             link = user_state[user_id]['link']
             user_state[user_id]['step'] = 'link'
             filename = str(uuid.uuid4())[:5]
@@ -85,7 +89,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             cmd = f'yt-dlp  --format "mkv,mp4" --download-sections "*{start}-{end}" --force-keyframes-at-cuts -o {output_file} {link}'
             proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
             print(proc.stdout)
-            await wait_msg.edit_text("🎥 Your video has been downloaded...Upoading to Telegram ⬆️")
+            await wait_msg.edit_text("🎥 Your video has been downloaded...Uploading to Telegram ⬆️")
             output_file = dir_path + find_file_with_prefix(filename)
             retries = 3
             while retries:
