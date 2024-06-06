@@ -80,7 +80,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             start = user_state[user_id]['start_time']
             if start >= end:
                 await update.message.reply_text("End time cannot be less than or equal to start time")
-                break
+                return
             link = user_state[user_id]['link']
             user_state[user_id]['step'] = 'link'
             filename = str(uuid.uuid4())[:5]
