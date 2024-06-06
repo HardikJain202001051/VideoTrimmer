@@ -27,14 +27,16 @@ def parse_timestamp(timestamp):
     timestamp = timestamp.split(' ')
     time = 0
     for t in timestamp:
-        if not t:
-            continue
-        if 'h' in t:
-            time = time + (3600*int(t[:-1]))
-        elif 'm' in t:
-            time = time + (60*int(t[:-1]))
-        elif 's' in t:
-            time = time + int(t[:-1])
+        p,s = t[:-1],t[-1]
+        if not p.isidigit():
+            return None
+        p = int(p)
+        if 'h' == s:
+            time = time + (3600*p)
+        elif 'm' == s:
+            time = time + (60*p)
+        elif 's' == s:
+            time = time + p
         else:
             return None
     return time

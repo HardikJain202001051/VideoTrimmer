@@ -28,8 +28,6 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     user_state[user_id] = {
         "step": "link",
-        "start_time": "",
-        "end_time": ""
     }
     await update.message.reply_text(
         f'Hey {update.effective_user.first_name}, Please send link to the YouTube video and follow the steps')
@@ -68,7 +66,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     elif user_state[user_id]['step'] == 'start':
         start = parse_timestamp(text)
         if start:
-            user_state[user_id]['start_time'] = text
+            user_state[user_id]['start_time'] = start
             user_state[user_id]['step'] = 'end'
             await update.message.reply_text('Enter the end time')
         else:
@@ -83,7 +81,9 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             user_state[user_id]['step'] = 'link'
             filename = str(uuid.uuid4())[:5]
             output_file = dir_path + filename
+            wait_msg = await update.message.reply_text("⌛ Your request is in process...Please wai few minutes")
             cmd = f'yt-dlp  --format "mkv,mp4" --download-sections "*{start}-{end}" --force-keyframes-at-cuts -o {output_file} {link}'
+            await wait_msg.edit_text("🎥 Your video has been downloaded...Upoading to Telegram ⬆️")
             proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
             print(proc.stdout)
             output_file = dir_path + find_file_with_prefix(filename)
