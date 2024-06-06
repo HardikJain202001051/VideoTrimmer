@@ -26,7 +26,7 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     if user_id not in allowed_users:
         return
-    user_state['user_id'] = {
+    user_state[user_id] = {
         "step": "link",
         "start_time": "",
         "end_time": ""
