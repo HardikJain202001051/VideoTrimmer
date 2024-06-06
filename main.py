@@ -83,9 +83,9 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             output_file = dir_path + filename
             wait_msg = await update.message.reply_text("⌛ Your request is in process...Please wai few minutes")
             cmd = f'yt-dlp  --format "mkv,mp4" --download-sections "*{start}-{end}" --force-keyframes-at-cuts -o {output_file} {link}'
-            await wait_msg.edit_text("🎥 Your video has been downloaded...Upoading to Telegram ⬆️")
             proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
             print(proc.stdout)
+            await wait_msg.edit_text("🎥 Your video has been downloaded...Upoading to Telegram ⬆️")
             output_file = dir_path + find_file_with_prefix(filename)
             retries = 3
             while retries:
