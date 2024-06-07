@@ -24,21 +24,14 @@ def is_valid_youtube_link(url):
         return False
 
 def parse_timestamp(timestamp):
-    timestamp = timestamp.split(' ')
-    time = 0
-    for t in timestamp:
-        p,s = t[:-1],t[-1]
-        if not p.isdigit():
-            return None
-        p = int(p)
-        if 'h' == s:
-            time = time + (3600*p)
-        elif 'm' == s:
-            time = time + (60*p)
-        elif 's' == s:
-            time = time + p
-        else:
-            return None
+    timestamp = timestamp.split('.')
+    if len(timestamp) != 3:
+        return None
+    hours, minutes, seconds = timestamp
+    if not (hours.isdigit() and minutes.isdigit() and seconds.isdigit()):
+        return None
+    hours, minutes, seconds = int(hours), int(minutes), int(seconds)
+    time = (hours * 3600) + (minutes * 60) + seconds
     return time
 
 def find_file_with_prefix(prefix):
