@@ -23,23 +23,33 @@ def is_valid_youtube_link(url):
     else:
         return False
 
+import re
+
 def parse_timestamp(timestamp):
-    timestamp = timestamp.split(' ')
-    time = 0
-    for t in timestamp:
-        p,s = t[:-1],t[-1]
-        if not p.isdigit():
-            return None
-        p = int(p)
-        if 'h' == s:
-            time = time + (3600*p)
-        elif 'm' == s:
-            time = time + (60*p)
-        elif 's' == s:
-            time = time + p
-        else:
-            return None
-    return time
+    patterns = [
+        r'(\d{1,2})h\s*(\d{1,2})m\s*(\d{1,2})s',  # hh mm ss
+        r'(\d{1,2})\.(\d{1,2})\.(\d{2})',  # hh.mm.ss
+        r'(\d{1,2}):(\d{1,2}):(\d{2})'  # hh:mm:ss
+    ]
+
+    for pattern in patterns:
+        match = re.match(pattern, timestamp)
+        if match:
+            hours, minutes, seconds = map(int, match.groups())
+            return (hours * 3600) + (minutes * 60) + seconds
+
+    return None
+
+def main():
+    timestamp = input("Enter a timestamp (hh mm ss, hh.mm.ss, or hh:mm:ss): ")
+    result = parse_timestamp(timestamp)
+    if result is not None:
+        print(f"Timestamp '{timestamp}' parsed to {result} seconds")
+    else:
+        print(f"Timestamp '{timestamp}' is invalid")
+
+if __name__ == "__main__":
+    main()
 
 def find_file_with_prefix(prefix):
     # Get list of files in the directory
