@@ -41,11 +41,11 @@ async def help_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                                     "video.\n• For longer clips consider creating multiple clips, each not more than 4 "
                                     "minutes or you might face error."
                                     "\n\n• Examples for valid timestamp format\n"
-                                    " ◦ 1h 1m 1s -> 1.1.1\n"
-                                    " ◦ 1h 1s -> 1.0.1\n"
-                                    " ◦ 1s -> 1\n"
-                                    " ◦ 1m -> 1.0\n"
-                                    " ◦ 1h -> 1.0.0\n"
+                                    " ◦ 1h 1m 1s => 1.1.1\n"
+                                    " ◦ 1h 1s => 1.0.1\n"
+                                    " ◦ 1s => 1\n"
+                                    " ◦ 1m => 1.0\n"
+                                    " ◦ 1h => 1.0.0\n"
                                     "")
 
 async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
