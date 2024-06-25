@@ -12,7 +12,7 @@ class Config:
         dir_path = config['videos_path']
         token = config['token']
         owner = None
-        allowed_users = set(map(int,config['allowed_users']))
+        allowed_users = list(set(map(int,config['allowed_users'])))
 
 
 def is_valid_youtube_link(url):
