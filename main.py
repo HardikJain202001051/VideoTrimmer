@@ -11,7 +11,6 @@ from pathlib import Path
 from utis import find_file_with_prefix
 
 dir_path = ''
-allowed_users = set()
 user_state = {}
 app = None
 Bot = None
@@ -24,7 +23,7 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     update:contains all the information about the user query which made this callback execute
     """
     user_id = update.message.from_user.id
-    if user_id not in allowed_users:
+    if user_id not in Config.allowed_users:
         return
     user_state[user_id] = {
         "step": "link",
@@ -35,7 +34,7 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def help_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    if user_id not in allowed_users:
+    if user_id not in Config.allowed_users:
         await update.message.reply_text("You do not have permission to access this bot.")
         return
     await update.message.reply_text("• You can directly send the YouTube video link and follow the steps to trim the "
@@ -51,7 +50,7 @@ async def help_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    if user_id not in allowed_users:
+    if user_id not in Config.allowed_users:
         await update.message.reply_text("You do not have permission to access this bot.")
         return
     text = update.message.text
@@ -101,7 +100,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     retries -= 1
                     if retries == 0:
                         await update.message.reply_text("Encountered some error, please try again.")
-                    await Bot.send_message(5343698850,f"Encountered the following error\n{e}")
+                    await Bot.send_message(Config.owner,f"Encountered the following error\n{e}")
             file_path = Path(output_file)
             if file_path.exists():
                 file_path.unlink()
@@ -148,8 +147,8 @@ def main():
 
 
 if __name__ == '__main__':
-    allowed_users = Config.allowed_users
-    for user in allowed_users:
+    Config.owner = Config.allowed_users[0]
+    for user in Config.allowed_users:
         user_state[int(user)] = {'step': 'link'}
     dir_path = Config.dir_path
     main()

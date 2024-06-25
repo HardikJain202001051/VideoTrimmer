@@ -11,6 +11,7 @@ class Config:
         config = json.load(f)
         dir_path = config['videos_path']
         token = config['token']
+        owner = None
         allowed_users = set(map(int,config['allowed_users']))
 
 
