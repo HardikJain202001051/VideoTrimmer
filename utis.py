@@ -27,11 +27,11 @@ import re
 
 def parse_timestamp(timestamp):
     patterns = [
-        r'(\d{1,2})h\s*(\d{1,2})m\s*(\d{1,2})s',  # hh mm ss
+        # r'(\d{1,2})h\s*(\d{1,2})m\s*(\d{1,2})s',  # hh mm ss
         r'(\d{1,2})\.(\d{1,2})\.(\d{1,2})',  # hh.mm.ss
-        r'(\d{1,2}):(\d{1,2}):(\d{1,2})',  # hh:mm:ss
+        # r'(\d{1,2}):(\d{1,2}):(\d{1,2})',  # hh:mm:ss
         r'(\d{1,2})\.(\d{1,2})', # mm.ss
-        r'(\d{1,2})\:(\d{1,2})', # mm:ss
+        # r'(\d{1,2})\:(\d{1,2})', # mm:ss
         r'(\d{1,2})' # ss
 
     ]
