@@ -56,11 +56,11 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     text = update.message.text
     if user_state[user_id]['step'] == 'link':
         if not is_valid_youtube_link(text):
-            await update.message.reply_text('Send a valid YouTube Video URL.')
+            await update.message.reply_text('Send a valid YouTube Video URL. For information on bot use /help.')
         else:
             user_state[user_id]['step'] = 'start'
             user_state[user_id]['link'] = text
-            await update.message.reply_text('Enter the start time\n\nExample -> 1h 20m 10s')
+            await update.message.reply_text('Enter the start time\n\nExample -> 1.20.10s')
 
     elif user_state[user_id]['step'] == 'start':
         start = parse_timestamp(text)
