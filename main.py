@@ -29,7 +29,7 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "step": "link",
     }
     await update.message.reply_text(
-        f'Hey {update.effective_user.first_name}, Please send link to the YouTube video and follow the steps')
+        f'Hey {update.effective_user.first_name}, Please send link to the YouTube video. For information use /help.')
 
 
 async def help_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -40,7 +40,7 @@ async def help_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text("• You can directly send the YouTube video link and follow the steps to trim the "
                                     "video.\n• For longer clips consider creating multiple clips, each not more than 4 "
                                     "minutes or you might face error."
-                                    "\n\n• Examples for valid timestamp format\n"
+                                    "\n\n• Valid timestamp format - hh.mm.ss\n"
                                     " ◦ 1h 1m 1s => 1.1.1\n"
                                     " ◦ 1h 1s => 1.0.1\n"
                                     " ◦ 1s => 1\n"
@@ -56,11 +56,11 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     text = update.message.text
     if user_state[user_id]['step'] == 'link':
         if not is_valid_youtube_link(text):
-            await update.message.reply_text('Send a valid YouTube Video URL. For information on bot use /help.')
+            await update.message.reply_text('Send a valid YouTube Video URL.')
         else:
             user_state[user_id]['step'] = 'start'
             user_state[user_id]['link'] = text
-            await update.message.reply_text('Enter the start time\n\nExample -> 1.20.10s')
+            await update.message.reply_text('Enter the start time\n\nExample -> 1.20.1')
 
     elif user_state[user_id]['step'] == 'start':
         start = parse_timestamp(text)
@@ -70,7 +70,7 @@ async def handle_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             await update.message.reply_text('Enter the end time')
         else:
             await update.message.reply_text("Send a valid timestamp or use /start command to start again. Use "
-                                            "/help to find the valid timestamps")
+                                            "/help to see the valid timestamps")
 
     elif user_state[user_id]['step'] == 'end':
         end = parse_timestamp(text)
