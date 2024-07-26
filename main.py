@@ -31,7 +31,23 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         f'Hey {update.effective_user.first_name}, Please send link to the YouTube video. For information use /help.')
 
-
+async def link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_id = update.message.from_user.id
+    if user_id not in Config.allowed_users:
+        await update.message.reply_text("You do not have permission to access this bot.")
+        return
+    text = update.message.text.split(' ')
+    if len(text) != 2:
+        await update.message.reply_text("Please provide a valid input...")
+        return
+    if user_state[user_id]['step'] == 'link':
+        if not is_valid_youtube_link(text[1]):
+            await update.message.reply_text('Send a valid YouTube Video URL.')
+        else:
+            cmd = f"yt-dlp -f bestaudio -g {text[1]}"
+            print(1)
+            proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            await update.message.reply_text(proc.stdout)
 async def help_(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     if user_id not in Config.allowed_users:
@@ -135,6 +151,7 @@ def main():
     below handler is for /start command where 'hello' function is registered as callback """
     app.add_handler(CommandHandler("start", hello))
     app.add_handler(CommandHandler("help", help_))
+    app.add_handler(CommandHandler("link", link))
 
     """This handler handles incoming messages. 
     filters.TEXT specifies that it will handle text messages only"""
